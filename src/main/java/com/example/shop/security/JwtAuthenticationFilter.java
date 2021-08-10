@@ -1,6 +1,7 @@
 package com.example.shop.security;
 
 import com.example.shop.domain.dto.LoginDto;
+import com.example.shop.domain.dto.SuccessfulLoginDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -29,6 +30,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager, ObjectMapper objectMapper) {
         super(authenticationManager);
         this.objectMapper = objectMapper;
+        setFilterProcessesUrl("/api/login");
     }
 
     @Override
@@ -55,7 +57,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .signWith(SignatureAlgorithm.HS512, "qwertyyuiop")
                 .compact();
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        objectMapper.writeValue(response.getWriter(), Collections.singletonMap("token", token));
+        objectMapper.writeValue(response.getWriter(), new SuccessfulLoginDto(token));
 
     }
 }
