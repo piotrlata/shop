@@ -136,16 +136,11 @@ public class BasketControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").doesNotExist());
     }
-//poprawic
+
     @Test
-    void shouldNotDeleteProduct() throws Exception {
-        mockMvc.perform(delete("/api/baskets")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(ProductDto.builder()
-                                .id(1L)
-                                .quantity(1)
-                                .build())))
-                .andExpect(status().isNotFound())
+    void shouldForbiddenWhenDeleteProduct() throws Exception {
+        mockMvc.perform(delete("/api/baskets/1"))
+                .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$").doesNotExist());
     }
 
@@ -166,14 +161,15 @@ public class BasketControllerTest {
                 .product(product)
                 .quantity(1)
                 .build());
-        mockMvc.perform(delete("/api/baskets")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(Basket.builder()
-                                .user(user)
-                                .product(product)
-                                .quantity(1)
-                                .build())))
+        mockMvc.perform(delete("/api/baskets/" + user.getId()))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$").doesNotExist());
+    }
+
+    @Test
+    void shouldNotClearBasketWithoutLoggedUser() throws Exception {
+        mockMvc.perform(delete("/api/baskets/1"))
+                .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$").doesNotExist());
     }
 }

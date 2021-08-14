@@ -4,6 +4,8 @@ import com.example.shop.domain.dto.UserDto;
 import com.example.shop.mapper.UserMapper;
 import com.example.shop.service.UserService;
 import com.example.shop.validator.group.CreateUser;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +26,7 @@ public class UserController {
     // /api/users/id
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated() && (hasRole('ADMIN') || @securityService.hasAccessToUser(#id))")
+    @ApiOperation(value = "get user by id", authorizations = @Authorization(value = "JWT"))
     public UserDto userById(@PathVariable Long id) {
         return userMapper.daoToDto(userService.findUserById(id));
     }

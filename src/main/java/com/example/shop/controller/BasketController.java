@@ -4,6 +4,7 @@ import com.example.shop.domain.dto.ProductDto;
 import com.example.shop.mapper.ProductMapper;
 import com.example.shop.service.BasketService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/baskets")
+@PreAuthorize("isAuthenticated()")
 public class BasketController {
     private final BasketService basketService;
     private final ProductMapper productMapper;
