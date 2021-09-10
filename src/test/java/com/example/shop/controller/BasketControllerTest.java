@@ -20,8 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.transaction.Transactional;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -172,4 +171,108 @@ public class BasketControllerTest {
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$").doesNotExist());
     }
+
+    @Test
+    @WithMockUser(username = "qweasd")
+    void shouldGetProducts() throws Exception {
+        User user = userRepository.save(User.builder()
+                .firstName("asd")
+                .lastName("qwe")
+                .email("qweasd")
+                .password("asdqweqw")
+                .build());
+        Product product = productRepository.save(Product.builder()
+                .quantity(2)
+                .build());
+        Basket basket = basketRepository.save(Basket.builder()
+                .user(user)
+                .product(product)
+                .quantity(1)
+                .build());
+        mockMvc.perform(get("/api/baskets"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1));
+    }
+
+    @Test
+    void shouldNotGetProductsWithoutLoggedUser() throws Exception {
+        mockMvc.perform(get("/api/baskets"))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$").doesNotExist());
+    }
+
+    @Test
+    @WithMockUser
+    void shouldNotGetProductsWithoutCurrentLoggedUser() throws Exception {
+        mockMvc.perform(get("/api/baskets"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$").doesNotExist());
+    }
+
+    @Test
+    @WithMockUser(username = "qweasd", roles = "ADMIN")
+    void shouldAddProduct() throws Exception {
+        User user = userRepository.save(User.builder()
+                .firstName("asd")
+                .lastName("qwe")
+                .email("qweasd")
+                .password("asdqweqw")
+                .build());
+        Product product = productRepository.save(Product.builder()
+                .quantity(10)
+                .build());
+        basketRepository.save(Basket.builder()
+                .user(user)
+                .product(product)
+                .quantity(4)
+                .build());
+        mockMvc.perform(post("/api/baskets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(ProductDto.builder()
+                                .id(product.getId())
+                                .quantity(4)
+                                .build())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").doesNotExist());
+    }
+
+    @Test
+    void shouldNotAddProductWithoutLoggedUser() throws Exception {
+        mockMvc.perform(post("/api/baskets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(ProductDto.builder()
+                                .id(1L)
+                                .quantity(4)
+                                .build())))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$").doesNotExist());
+    }
+
+    @Test
+    @WithMockUser(username = "qweasd")
+    void shouldNotAddProductWithToHighQuantity() throws Exception {
+        User user = userRepository.save(User.builder()
+                .firstName("asd")
+                .lastName("qwe")
+                .email("qweasd")
+                .password("asdqweqw")
+                .build());
+        Product product = productRepository.save(Product.builder()
+                .quantity(10)
+                .build());
+        basketRepository.save(Basket.builder()
+                .user(user)
+                .product(product)
+                .quantity(4)
+                .build());
+        mockMvc.perform(post("/api/baskets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(ProductDto.builder()
+                                .id(product.getId())
+                                .quantity(22)
+                                .build())))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$").doesNotExist());
+    }
+
 }

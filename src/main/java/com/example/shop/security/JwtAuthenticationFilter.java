@@ -21,12 +21,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Date;
 import java.util.stream.Collectors;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final ObjectMapper objectMapper;
+
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager, ObjectMapper objectMapper) {
         super(authenticationManager);
         this.objectMapper = objectMapper;
@@ -37,7 +37,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
             LoginDto loginDto = objectMapper.readValue(request.getInputStream(), LoginDto.class);
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
             return getAuthenticationManager().authenticate(authenticationToken);
         } catch (IOException e) {
             throw new AuthenticationServiceException("parameters aren't valid");

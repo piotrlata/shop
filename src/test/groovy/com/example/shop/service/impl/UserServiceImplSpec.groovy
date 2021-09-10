@@ -4,12 +4,13 @@ import com.example.shop.domain.dao.Role
 import com.example.shop.domain.dao.User
 import com.example.shop.repository.RoleRepository
 import com.example.shop.repository.UserRepository
+import com.example.shop.security.SecurityUtils
 import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import org.springframework.security.crypto.password.PasswordEncoder
 import spock.lang.Specification
 
 import javax.persistence.EntityNotFoundException
+import java.time.LocalDateTime
 
 class UserServiceImplSpec extends Specification {
     def userService
@@ -82,12 +83,31 @@ class UserServiceImplSpec extends Specification {
 
     def 'should page users'() {
         given:
-        def pageable = new PageRequest(1, 1, Sort.unsorted())
+        def pageable = PageRequest.of(1, 1)
+
         when:
-        userRepository.findAll(pageable)
+        userService.getPage(pageable)
 
         then:
         1 * userRepository.findAll(pageable)
         0 * _
+    }
+
+    def 'should get current user'() {
+        when:
+        userService.getCurrentUser()
+
+        then:
+        1 * userRepository.findByEmail(SecurityUtils.getCurrentUserEmail()) >> Optional.of(new User(1, '', '', '', '', LocalDateTime.now(), LocalDateTime.now(), '', '', []))
+        0 * _
+    }
+
+    def 'should not get current user'() {
+        when:
+        userService.getCurrentUser()
+
+        then:
+        userRepository.findByEmail(SecurityUtils.getCurrentUserEmail()) >> Optional.empty()
+        thrown EntityNotFoundException
     }
 }

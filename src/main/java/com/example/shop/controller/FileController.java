@@ -6,6 +6,7 @@ import com.example.shop.generic.GenericFactory;
 import com.example.shop.generic.strategy.file.FileGeneratorStrategy;
 import com.example.shop.generic.strategy.mail.MailSenderStrategy;
 import com.example.shop.generic.strategy.mail.model.MailType;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -26,26 +27,29 @@ public class FileController {
     private final GenericFactory<MailType, MailSenderStrategy> mailFactory;
 
     @GetMapping
+    @ApiOperation(value = "generate file by type")
     public ResponseEntity<byte[]> testFactory(@RequestParam FileType fileType) {
         byte[] file = generatorFactory.getMapValue(fileType).generateFile();
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
         httpHeaders.set(HttpHeaders.CONTENT_LENGTH, Integer.toString(file.length));
-        httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=report."+fileType.toString().toLowerCase(Locale.ROOT));
+        httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=report." + fileType.toString().toLowerCase(Locale.ROOT));
         return ResponseEntity.ok().headers(httpHeaders).body(file);
     }
 
     @GetMapping("/generic")
+    @ApiOperation(value = "generate file by type")
     public ResponseEntity<byte[]> testGenericFactory(@RequestParam FileType fileType) {
         byte[] file = fileFactory.getStrategyByType(fileType).generateFile();
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
         httpHeaders.set(HttpHeaders.CONTENT_LENGTH, Integer.toString(file.length));
-        httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION,"attachment;filename=report."+ fileType.toString().toLowerCase(Locale.ROOT));
+        httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=report." + fileType.toString().toLowerCase(Locale.ROOT));
         return ResponseEntity.ok().headers(httpHeaders).body(file);
     }
 
     @GetMapping("mail")
+    @ApiOperation(value = "test method for generic flyweight pattern")
     public void testMailFactory(@RequestParam MailType mailType) {
         mailFactory.getStrategyByType(mailType).sendMail();
 

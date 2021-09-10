@@ -3,11 +3,11 @@ package com.example.shop.service.impl;
 import com.example.shop.domain.dao.User;
 import com.example.shop.repository.RoleRepository;
 import com.example.shop.repository.UserRepository;
+import com.example.shop.security.SecurityUtils;
 import com.example.shop.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException());
+        return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
@@ -56,6 +56,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getCurrentUser() {
-        return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new EntityNotFoundException("user not logged"));
+        return userRepository.findByEmail(SecurityUtils.getCurrentUserEmail())
+                .orElseThrow(() -> new EntityNotFoundException("user not logged"));
     }
 }

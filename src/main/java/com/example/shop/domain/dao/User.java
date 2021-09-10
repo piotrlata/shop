@@ -25,12 +25,13 @@ import java.util.List;
 @Builder
 public class User {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstName;
     private String lastName;
     @Column(unique = true)
     private String email;
+    @NotAudited
     private String password;
     @CreatedDate
     private LocalDateTime createdDate;

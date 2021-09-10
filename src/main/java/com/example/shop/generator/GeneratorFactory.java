@@ -22,6 +22,7 @@ public class GeneratorFactory {
         strategyMap = generatorStrategyList.stream()
                 .collect(Collectors.toMap(GeneratorStrategy::getFileType, Function.identity()));
     }
+
     public GeneratorStrategy getMapValue(FileType fileType) {
         return strategyMap.get(fileType);
     }

@@ -22,7 +22,7 @@ public class HazelcastConfig {
                                 .setSize(10)
                                 .setMaxSizePolicy(MaxSizePolicy.FREE_HEAP_SIZE))
                         .setTimeToLiveSeconds(60 * 60 * 24));
-        config.getSerializationConfig().addDataSerializableFactory(1,id -> id==1?new Product():null);
+        config.getSerializationConfig().addDataSerializableFactory(1, id -> id == 1 ? new Product() : null);
         return config;
     }
 }

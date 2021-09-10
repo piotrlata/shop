@@ -76,10 +76,10 @@ class ProductServiceImplSpec extends Specification {
 
     def 'should page products'() {
         given:
-        def pageable = new PageRequest(1, 1, Sort.unsorted())
+        def pageable = PageRequest.of(1, 1)
 
         when:
-        productRepository.findAll(pageable)
+        productService.getPage(pageable)
 
         then:
         1 * productRepository.findAll(pageable)

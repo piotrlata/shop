@@ -8,7 +8,10 @@ import java.util.Optional;
 
 public interface BasketRepository extends JpaRepository<Basket, Long> {
     void deleteByProductIdAndUserId(Long productId, Long userId);
+
     void deleteByUserId(Long userId);
+
     List<Basket> findByUserId(Long userId);
+
     Optional<Basket> findByProductIdAndUserId(Long productId, Long userId);
 }

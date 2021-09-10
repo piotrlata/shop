@@ -1,14 +1,10 @@
 package com.example.shop.security
 
-import com.example.shop.domain.dao.User
+
 import com.example.shop.repository.UserRepository
-import org.springframework.security.core.authority.SimpleGrantedAuthority
 import spock.lang.Specification
 
-import javax.persistence.EntityNotFoundException
-import java.util.stream.Collectors
-
-class UserDetailsServiceImplSpec extends Specification{
+class UserDetailsServiceImplSpec extends Specification {
     def userRepository = Mock(UserRepository)
 
 //    def 'should load user by email'() {

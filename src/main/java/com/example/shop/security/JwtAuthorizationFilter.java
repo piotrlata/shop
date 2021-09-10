@@ -38,19 +38,19 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 .parseClaimsJws(token.replace("Bearer ", ""))
                 .getBody();
         String email = claims.getSubject();
-        if (email != null) {
-            String authorities = claims.get("authorities", String.class);
-            List<GrantedAuthority> authorityList = new ArrayList<>();
-            if (authorities != null && !authorities.isEmpty()) {
-                authorityList = Arrays.stream(authorities.split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
-            }
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, null, authorityList);
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            chain.doFilter(request,response);
-        } else {
+        if (email == null) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            return;
         }
+        String authorities = claims.get("authorities", String.class);
+        List<GrantedAuthority> authorityList = new ArrayList<>();
+        if (authorities != null && !authorities.isEmpty()) {
+            authorityList = Arrays.stream(authorities.split(","))
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+        }
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, null, authorityList);
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        chain.doFilter(request, response);
     }
 }

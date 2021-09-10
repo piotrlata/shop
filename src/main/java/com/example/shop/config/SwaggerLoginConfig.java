@@ -26,7 +26,7 @@ import java.util.Set;
 @Configuration
 @Primary
 public class SwaggerLoginConfig extends ApiListingScanner {
-
+    private static final String LOGIN = "login";
 
     public SwaggerLoginConfig(ApiDescriptionReader apiDescriptionReader, ApiModelReader apiModelReader, DocumentationPluginsManager pluginsManager) {
         super(apiDescriptionReader, apiModelReader, pluginsManager);
@@ -37,7 +37,7 @@ public class SwaggerLoginConfig extends ApiListingScanner {
         Multimap<String, ApiListing> scan = super.scan(context);
         Operation operation = new OperationBuilder(new CachingOperationNameGenerator())
                 .method(HttpMethod.POST)
-                .uniqueId("login")
+                .uniqueId(LOGIN)
                 .parameters(Collections.singletonList(new ParameterBuilder()
                         .name("body")
                         .required(true)
@@ -50,10 +50,10 @@ public class SwaggerLoginConfig extends ApiListingScanner {
                         new ResponseMessage(401, "incorrect login data", new ModelRef("String"), Collections.emptyMap(), Collections.emptyList())
                 ))
                 .consumes(Collections.singleton(MediaType.APPLICATION_JSON_VALUE))
-                .summary("login")
+                .summary(LOGIN)
                 .notes("here u can login")
                 .build();
-        ApiDescription apiDescription = new ApiDescription("login", "/api/login", "here you can login", Collections.singletonList(operation), false);
+        ApiDescription apiDescription = new ApiDescription(LOGIN, "/api/login", "here you can login", Collections.singletonList(operation), false);
         scan.put("authentication", new ApiListingBuilder(context.getDocumentationContext().getApiDescriptionOrdering())
                 .apis(Collections.singletonList(apiDescription))
                 .description("jwt authentication")

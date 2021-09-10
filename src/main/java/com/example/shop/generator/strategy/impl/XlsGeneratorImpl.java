@@ -1,12 +1,16 @@
 package com.example.shop.generator.strategy.impl;
 
 import com.example.shop.domain.dao.Product;
+import com.example.shop.exception.FileGenerateException;
 import com.example.shop.generator.model.FileType;
 import com.example.shop.generator.strategy.GeneratorStrategy;
 import com.example.shop.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.stereotype.Component;
 
@@ -28,8 +32,7 @@ public class XlsGeneratorImpl implements GeneratorStrategy {
     @Override
     public byte[] generateFile() {
         log.info("xls");
-        try {
-            Workbook workbook = WorkbookFactory.create(false);
+        try (Workbook workbook = WorkbookFactory.create(false)) {
             Sheet sheet = workbook.createSheet("products");
             Row row = sheet.createRow(0);
             row.createCell(0).setCellValue("id");
@@ -53,9 +56,10 @@ public class XlsGeneratorImpl implements GeneratorStrategy {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             workbook.write(byteArrayOutputStream);
             return byteArrayOutputStream.toByteArray();
+
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("error during creation report", e);
         }
-        return new byte[0];
+        throw new FileGenerateException("could not generate xls");
     }
 }

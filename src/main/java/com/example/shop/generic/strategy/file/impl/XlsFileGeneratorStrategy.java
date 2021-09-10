@@ -31,8 +31,7 @@ public class XlsFileGeneratorStrategy implements FileGeneratorStrategy {
     @Override
     public byte[] generateFile() {
         log.info("xls");
-        try {
-            Workbook workbook = WorkbookFactory.create(false);
+        try (Workbook workbook = WorkbookFactory.create(false)) {
             Sheet sheet = workbook.createSheet("users");
             Row row = sheet.createRow(0);
             row.createCell(0).setCellValue("id");

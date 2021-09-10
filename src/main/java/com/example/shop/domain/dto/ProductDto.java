@@ -15,14 +15,14 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductDto {
-
     private Long id;
     @NotNull
     private String name;
-    @Min(value = 1,message = "price cannot be less than 1")
+    @Min(value = 1, message = "price cannot be less than 1")
     private Double price;
     @NotNull
     private String description;
-    @Min(value = 1,message = "quantity cannot be less than 1")
+    @Min(value = 1, message = "quantity cannot be less than 1")
     private Integer quantity;
+    private Integer revisionNumber;
 }

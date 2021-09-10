@@ -1,7 +1,6 @@
 package com.example.shop.service.impl
 
 
-import com.example.shop.domain.dao.Role
 import com.example.shop.domain.dao.User
 import com.example.shop.repository.BasketRepository
 import com.example.shop.service.ProductService
@@ -22,263 +21,47 @@ class BasketServiceImplSpec extends Specification {
 
     def 'should delete product from basket'() {
         given:
-        def productId = new Long(1)
+        def productId = 1L
 
         when:
-        basketRepository.deleteById(productId)
+        basketService.deleteProduct(1)
 
         then:
-        1 * basketRepository.deleteById(productId)
+        1 * userService.getCurrentUser() >> new User(2, '', '', '', '', LocalDateTime.now(), LocalDateTime.now(), '', '', [])
+        1 * basketRepository.deleteByProductIdAndUserId(productId, 2)
         0 * _
     }
 
     def 'should clear basket'() {
         when:
-        userService.getCurrentUser() >> new User(1, '', '', '', '', LocalDateTime.now(), LocalDateTime.now(), '', '', new List<Role>() {
-            @Override
-            int size() {
-                return 1
-            }
-
-            @Override
-            boolean isEmpty() {
-                return false
-            }
-
-            @Override
-            boolean contains(Object o) {
-                return false
-            }
-
-            @Override
-            Iterator<Role> iterator() {
-                return null
-            }
-
-            @Override
-            Object[] toArray() {
-                return new Object[0]
-            }
-
-            @Override
-            def <T> T[] toArray(T[] a) {
-                return null
-            }
-
-            @Override
-            boolean add(Role role) {
-                return false
-            }
-
-            @Override
-            boolean remove(Object o) {
-                return false
-            }
-
-            @Override
-            boolean containsAll(Collection<?> c) {
-                return false
-            }
-
-            @Override
-            boolean addAll(Collection<? extends Role> c) {
-                return false
-            }
-
-            @Override
-            boolean addAll(int index, Collection<? extends Role> c) {
-                return false
-            }
-
-            @Override
-            boolean removeAll(Collection<?> c) {
-                return false
-            }
-
-            @Override
-            boolean retainAll(Collection<?> c) {
-                return false
-            }
-
-            @Override
-            void clear() {
-
-            }
-
-            @Override
-            Role get(int index) {
-                return null
-            }
-
-            @Override
-            Role set(int index, Role element) {
-                return null
-            }
-
-            @Override
-            void add(int index, Role element) {
-
-            }
-
-            @Override
-            Role remove(int index) {
-                return null
-            }
-
-            @Override
-            int indexOf(Object o) {
-                return 0
-            }
-
-            @Override
-            int lastIndexOf(Object o) {
-                return 0
-            }
-
-            @Override
-            ListIterator<Role> listIterator() {
-                return null
-            }
-
-            @Override
-            ListIterator<Role> listIterator(int index) {
-                return null
-            }
-
-            @Override
-            List<Role> subList(int fromIndex, int toIndex) {
-                return null
-            }
-        })
-        basketRepository.deleteByUserId(1)
+        basketService.clearBasket()
 
         then:
+        1 * userService.getCurrentUser() >> new User(1, '', '', '', '', LocalDateTime.now(), LocalDateTime.now(), '', '', [])
         1 * basketRepository.deleteByUserId(1)
         0 * _
     }
 
-    def 'should get products from basket'() {
-        when:
-        userService.getCurrentUser() >> new User(1, '', '', '', '', LocalDateTime.now(), LocalDateTime.now(), '', '', new List<Role>() {
-            @Override
-            int size() {
-                return 1
-            }
-
-            @Override
-            boolean isEmpty() {
-                return false
-            }
-
-            @Override
-            boolean contains(Object o) {
-                return false
-            }
-
-            @Override
-            Iterator<Role> iterator() {
-                return null
-            }
-
-            @Override
-            Object[] toArray() {
-                return new Object[0]
-            }
-
-            @Override
-            def <T> T[] toArray(T[] a) {
-                return null
-            }
-
-            @Override
-            boolean add(Role role) {
-                return false
-            }
-
-            @Override
-            boolean remove(Object o) {
-                return false
-            }
-
-            @Override
-            boolean containsAll(Collection<?> c) {
-                return false
-            }
-
-            @Override
-            boolean addAll(Collection<? extends Role> c) {
-                return false
-            }
-
-            @Override
-            boolean addAll(int index, Collection<? extends Role> c) {
-                return false
-            }
-
-            @Override
-            boolean removeAll(Collection<?> c) {
-                return false
-            }
-
-            @Override
-            boolean retainAll(Collection<?> c) {
-                return false
-            }
-
-            @Override
-            void clear() {
-
-            }
-
-            @Override
-            Role get(int index) {
-                return null
-            }
-
-            @Override
-            Role set(int index, Role element) {
-                return null
-            }
-
-            @Override
-            void add(int index, Role element) {
-
-            }
-
-            @Override
-            Role remove(int index) {
-                return null
-            }
-
-            @Override
-            int indexOf(Object o) {
-                return 0
-            }
-
-            @Override
-            int lastIndexOf(Object o) {
-                return 0
-            }
-
-            @Override
-            ListIterator<Role> listIterator() {
-                return null
-            }
-
-            @Override
-            ListIterator<Role> listIterator(int index) {
-                return null
-            }
-
-            @Override
-            List<Role> subList(int fromIndex, int toIndex) {
-                return null
-            }
-        })
-        basketRepository.findByUserId(1)
-
-        then:
-        1 * basketRepository.findByUserId(1)
-        0 * _
-    }
+//    def 'should add product to basket'() {
+//        given:
+//        def product = new Product(1, '', 10.22, '', 1, new Category())
+//
+//        when:
+//        basketService.addProduct(product)
+//
+//        then:
+//        def user = userService.getCurrentUser() >> new User(2, '', '', '', '', LocalDateTime.now(), LocalDateTime.now(), '', '', [])
+//        1*productService.findProductById(product.id)
+//        1*basketRepository.findByProductIdAndUserId(product.id, 2) >> Optional.of(new Basket(3,user, product,1))
+//
+//    }
+//    def 'should get products from basket'() {
+//        when:
+//        basketService.getProducts()
+//
+//        then:
+//        1 * userService.getCurrentUser() >> new User(1, 'qwe', 'qwe', 'qwe', 'qwe', LocalDateTime.now(), LocalDateTime.now(), 'qwe', 'qwe', [])
+//        1 * basketRepository.findByUserId(1) >> Optional.of()
+//        0 * _
+//    }
 }

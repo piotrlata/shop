@@ -19,12 +19,14 @@ public class AppConfig {
             createRoleIfNeeded(roleRepository, "ROLE_ADMIN");
         };
     }
+
     public void createRoleIfNeeded(RoleRepository roleRepository, String roleName) {
         Optional<Role> role = roleRepository.findByName(roleName);
         if (role.isEmpty()) {
             roleRepository.save(new Role(null, roleName));
         }
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

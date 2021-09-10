@@ -3,7 +3,6 @@ package com.example.shop.service.impl
 import com.example.shop.domain.dao.Category
 import com.example.shop.repository.CategoryRepository
 import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import spock.lang.Specification
 
 import javax.persistence.EntityNotFoundException
@@ -18,7 +17,7 @@ class CategoryServiceImplSpec extends Specification {
 
     def 'should save category'() {
         given:
-        def category = new Category()
+        def category = new Category(1, "", "")
 
         when:
         categoryService.save(category)
@@ -30,7 +29,7 @@ class CategoryServiceImplSpec extends Specification {
 
     def 'should find category by id'() {
         given:
-        categoryRepository.findById(1) >> Optional.of(new Category())
+        categoryRepository.findById(1) >> Optional.of(new Category(1, "", ""))
 
         when:
         def result = categoryService.findCategoryById(1)
@@ -55,7 +54,8 @@ class CategoryServiceImplSpec extends Specification {
         categoryService.delete(1)
 
         then:
-        categoryRepository.deleteById(1)
+        1 * categoryRepository.deleteById(1)
+        0 * _
     }
 
     def 'should update category'() {
@@ -73,10 +73,10 @@ class CategoryServiceImplSpec extends Specification {
 
     def 'should page categories'() {
         given:
-        def pageable = new PageRequest(1, 1, Sort.unsorted())
+        def pageable = PageRequest.of(1, 1)
 
         when:
-        categoryRepository.findAll(pageable)
+        categoryService.getPage(pageable)
 
         then:
         1 * categoryRepository.findAll(pageable)

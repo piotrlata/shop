@@ -37,14 +37,14 @@ public class UserControllerTest {
     @Test
     void shouldSaveUser() throws Exception {
         mockMvc.perform(post("/api/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(UserDto.builder()
-                        .email("asdasdasd")
-                        .firstName("Adam")
-                        .lastName("ASeweq")
-                        .password("asdqweqweasd")
-                        .confirmedPassword("asdqweqweasd")
-                        .build())))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(UserDto.builder()
+                                .email("asdasdasd")
+                                .firstName("Adam")
+                                .lastName("ASeweq")
+                                .password("asdqweqweasd")
+                                .confirmedPassword("asdqweqweasd")
+                                .build())))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.firstName").value("Adam"))
@@ -57,14 +57,14 @@ public class UserControllerTest {
     @Test
     void shouldNotSaveUserWithDifferentPasswords() throws Exception {
         mockMvc.perform(post("/api/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(UserDto.builder()
-                        .email("asdasdasd")
-                        .firstName("Adam")
-                        .lastName("ASeweq")
-                        .password("asdqweqweasd")
-                        .confirmedPassword("asdaw")
-                        .build())))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(UserDto.builder()
+                                .email("asdasdasd")
+                                .firstName("Adam")
+                                .lastName("ASeweq")
+                                .password("asdqweqweasd")
+                                .confirmedPassword("asdaw")
+                                .build())))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$").doesNotExist());
     }
@@ -72,14 +72,14 @@ public class UserControllerTest {
     @Test
     void shouldNotSaveUserWithoutValidFields() throws Exception {
         mockMvc.perform(post("/api/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(UserDto.builder()
-                        .email("")
-                        .firstName("")
-                        .lastName("")
-                        .password("qweasd")
-                        .confirmedPassword("qweasd")
-                        .build())))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(UserDto.builder()
+                                .email("")
+                                .firstName("")
+                                .lastName("")
+                                .password("qweasd")
+                                .confirmedPassword("qweasd")
+                                .build())))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$", hasSize(3)));
     }
@@ -87,8 +87,8 @@ public class UserControllerTest {
     @Test
     void shouldForbiddenWhenUserIsNotLoggedForGettingUserPage() throws Exception {
         mockMvc.perform(get("/api/users")
-                .queryParam("page", "0")
-                .queryParam("size", "10"))
+                        .queryParam("page", "0")
+                        .queryParam("size", "10"))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$").doesNotExist());
     }
@@ -97,8 +97,8 @@ public class UserControllerTest {
     @WithMockUser
     void shouldForbiddenWhenUserIsWithoutAdminRole() throws Exception {
         mockMvc.perform(get("/api/users")
-                .queryParam("page", "0")
-                .queryParam("size", "10"))
+                        .queryParam("page", "0")
+                        .queryParam("size", "10"))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$").doesNotExist());
     }
@@ -112,8 +112,8 @@ public class UserControllerTest {
                 .email("asdwq")
                 .build());
         mockMvc.perform(get("/api/users")
-                .queryParam("page", "0")
-                .queryParam("size", "10"))
+                        .queryParam("page", "0")
+                        .queryParam("size", "10"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", hasSize(1)));
     }
@@ -121,12 +121,12 @@ public class UserControllerTest {
     @Test
     void shouldNotUpdateWhenUserIsNotLogged() throws Exception {
         mockMvc.perform(put("/api/users/5")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(UserDto.builder()
-                        .firstName("asd")
-                        .lastName("zxc")
-                        .email("qweasd")
-                        .build())))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(UserDto.builder()
+                                .firstName("asd")
+                                .lastName("zxc")
+                                .email("qweasd")
+                                .build())))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$").doesNotExist());
     }
@@ -140,12 +140,12 @@ public class UserControllerTest {
                 .email("zxcsadw")
                 .build());
         mockMvc.perform(put("/api/users/" + user.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(UserDto.builder()
-                        .firstName("asdqw")
-                        .lastName("ascawfg")
-                        .email("asdqw")
-                        .build())))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(UserDto.builder()
+                                .firstName("asdqw")
+                                .lastName("ascawfg")
+                                .email("asdqw")
+                                .build())))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$").doesNotExist());
     }
@@ -160,12 +160,12 @@ public class UserControllerTest {
                 .password("asdqweqw")
                 .build());
         mockMvc.perform(put("/api/users/" + user.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(UserDto.builder()
-                        .firstName("qwe")
-                        .lastName("asd")
-                        .email("asdqwe")
-                        .build())))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(UserDto.builder()
+                                .firstName("qwe")
+                                .lastName("asd")
+                                .email("asdqwe")
+                                .build())))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(user.getId()))
                 .andExpect(jsonPath("$.firstName").value(user.getFirstName()))

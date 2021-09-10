@@ -41,8 +41,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product findProductById(Long id) {
-        log.info("object with id {} not in cache",id);
-        return productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException());
+        log.info("object with id {} not in cache", id);
+        return productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override

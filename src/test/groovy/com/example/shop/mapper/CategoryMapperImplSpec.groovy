@@ -1,9 +1,7 @@
 package com.example.shop.mapper
 
 import com.example.shop.domain.dao.Category
-import com.example.shop.domain.dao.Product
 import com.example.shop.domain.dto.CategoryDto
-import com.example.shop.domain.dto.ProductDto
 import spock.lang.Specification
 
 class CategoryMapperImplSpec extends Specification {

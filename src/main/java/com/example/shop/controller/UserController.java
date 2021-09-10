@@ -23,7 +23,6 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
 
-    // /api/users/id
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated() && (hasRole('ADMIN') || @securityService.hasAccessToUser(#id))")
     @ApiOperation(value = "get user by id", authorizations = @Authorization(value = "JWT"))
@@ -31,27 +30,31 @@ public class UserController {
         return userMapper.daoToDto(userService.findUserById(id));
     }
 
-    @Validated(CreateUser.class)
     @PostMapping
+    @Validated(CreateUser.class)
     @PreAuthorize("isAnonymous()")
+    @ApiOperation(value = "save user")
     public UserDto saveUser(@RequestBody @Valid UserDto user) {
         return userMapper.daoToDto(userService.save(userMapper.dtoToDao(user)));
     }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
+    @ApiOperation(value = "get user page", authorizations = @Authorization(value = "JWT"))
     public Page<UserDto> userPage(@RequestParam int page, @RequestParam int size) {
         return userService.getPage(PageRequest.of(page, size)).map(userMapper::daoToDto);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("isAuthenticated() && (hasRole('ADMIN') || @securityService.hasAccessToUser(#id))")
+    @ApiOperation(value = "delete user by id", authorizations = @Authorization(value = "JWT"))
     public void deleteUser(@PathVariable Long id) {
         userService.delete(id);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("isAuthenticated() && (hasRole('ADMIN') || @securityService.hasAccessToUser(#id))")
+    @ApiOperation(value = "update user", authorizations = @Authorization(value = "JWT"))
     public UserDto updateUser(@Valid @RequestBody UserDto user, @PathVariable Long id) {
         return userMapper.daoToDto(userService.update(userMapper.dtoToDao(user), id));
     }

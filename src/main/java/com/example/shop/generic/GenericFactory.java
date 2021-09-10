@@ -21,7 +21,8 @@ public class GenericFactory<K, V extends GenericStrategy<K>> {
         strategyMap = strategies.stream()
                 .collect(Collectors.toMap(GenericStrategy::getType, Function.identity()));
     }
-    public V  getStrategyByType(K k) {
+
+    public V getStrategyByType(K k) {
         return strategyMap.get(k);
     }
 }
