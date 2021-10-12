@@ -16,7 +16,7 @@ import java.io.IOException;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Product implements IdentifiedDataSerializable {
+public class Product extends Auditable implements IdentifiedDataSerializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

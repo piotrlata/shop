@@ -1,3 +1,5 @@
+server:
+  port: 5000
 spring:
   datasource:
     url: jdbc:mysql://${RDS_HOSTNAME:localhost}:${RDS_PORT:3306}/${RDS_DB_NAME:shop}?useSSL=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Europe/Warsaw&autoReconnect=true&characterEncoding=UTF-8&useUnicode=yes
@@ -9,3 +11,6 @@ spring:
   jackson:
     serialization:
       FAIL_ON_EMPTY_BEANS: false
+  flyway:
+    baselineOnMigrate: true
+    enabled: false

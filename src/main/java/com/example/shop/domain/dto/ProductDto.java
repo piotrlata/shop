@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDto {
+public class ProductDto extends AuditableDto {
     private Long id;
     @NotNull
     private String name;

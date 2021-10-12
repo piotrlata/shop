@@ -13,7 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/history/users")
+@RequestMapping("/api/history")
 @RequiredArgsConstructor
 public class HistoryController {
     private final UserRepository userRepository;
@@ -21,17 +21,17 @@ public class HistoryController {
     private final CategoryRepository categoryRepository;
     private final RevisionMapper revisionMapper;
 
-    @GetMapping("/{id}")
+    @GetMapping("/user/{id}")
     public Page<UserDto> getUserHistory(@PathVariable Long id, @RequestParam int page, @RequestParam int size) {
         return userRepository.findRevisions(id, PageRequest.of(page, size)).map(revisionMapper::toUserDto);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/product/{id}")
     public Page<ProductDto> getProductHistory(@PathVariable Long id, @RequestParam int page, @RequestParam int size) {
         return productRepository.findRevisions(id, PageRequest.of(page, size)).map(revisionMapper::toProductDto);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/category/{id}")
     public Page<CategoryDto> getCategoryHistory(@PathVariable Long id, @RequestParam int page, @RequestParam int size) {
         return categoryRepository.findRevisions(id, PageRequest.of(page, size)).map(revisionMapper::toCategoryDto);
     }

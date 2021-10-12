@@ -1,13 +1,12 @@
 package com.example.shop.service.impl
 
-
+import com.example.shop.domain.dao.Basket
+import com.example.shop.domain.dao.Product
 import com.example.shop.domain.dao.User
 import com.example.shop.repository.BasketRepository
 import com.example.shop.service.ProductService
 import com.example.shop.service.UserService
 import spock.lang.Specification
-
-import java.time.LocalDateTime
 
 class BasketServiceImplSpec extends Specification {
     def basketService
@@ -27,7 +26,7 @@ class BasketServiceImplSpec extends Specification {
         basketService.deleteProduct(1)
 
         then:
-        1 * userService.getCurrentUser() >> new User(2, '', '', '', '', LocalDateTime.now(), LocalDateTime.now(), '', '', [])
+        1 * userService.getCurrentUser() >> new User(id: 2)
         1 * basketRepository.deleteByProductIdAndUserId(productId, 2)
         0 * _
     }
@@ -37,31 +36,107 @@ class BasketServiceImplSpec extends Specification {
         basketService.clearBasket()
 
         then:
-        1 * userService.getCurrentUser() >> new User(1, '', '', '', '', LocalDateTime.now(), LocalDateTime.now(), '', '', [])
+        1 * userService.getCurrentUser() >> new User(id: 1)
         1 * basketRepository.deleteByUserId(1)
         0 * _
     }
 
-//    def 'should add product to basket'() {
-//        given:
-//        def product = new Product(1, '', 10.22, '', 1, new Category())
-//
-//        when:
-//        basketService.addProduct(product)
-//
-//        then:
-//        def user = userService.getCurrentUser() >> new User(2, '', '', '', '', LocalDateTime.now(), LocalDateTime.now(), '', '', [])
-//        1*productService.findProductById(product.id)
-//        1*basketRepository.findByProductIdAndUserId(product.id, 2) >> Optional.of(new Basket(3,user, product,1))
-//
-//    }
-//    def 'should get products from basket'() {
-//        when:
-//        basketService.getProducts()
-//
-//        then:
-//        1 * userService.getCurrentUser() >> new User(1, 'qwe', 'qwe', 'qwe', 'qwe', LocalDateTime.now(), LocalDateTime.now(), 'qwe', 'qwe', [])
-//        1 * basketRepository.findByUserId(1) >> Optional.of()
-//        0 * _
-//    }
+    def 'should add quantity to the product in basket'() {
+        given:
+        def product = new Product(id: 1, quantity: 2)
+
+        when:
+        basketService.addProduct(product)
+
+        then:
+        1 * userService.getCurrentUser() >> new User(id: 2)
+        1 * productService.findProductById(product.id) >> new Product(id: 1, quantity: 3)
+        1 * basketRepository.findByProductIdAndUserId(1, 2) >> Optional.of(new Basket(quantity: 1))
+        1 * basketRepository.save(new Basket(quantity: 3))
+        0 * _
+    }
+
+    def 'should not add quantity to product in basket'() {
+        given:
+        def product = new Product(id: 1, quantity: 2)
+        userService.getCurrentUser() >> new User(id: 2)
+        productService.findProductById(product.id) >> new Product(id: 1, quantity: 1)
+        basketRepository.findByProductIdAndUserId(1, 2) >> Optional.of(new Basket(quantity: 2))
+
+        when:
+        basketService.addProduct(product)
+
+        then:
+        thrown IllegalArgumentException
+    }
+
+    def 'should not add product to basket'() {
+        given:
+        def product = new Product(id: 1, quantity: 2)
+        userService.getCurrentUser() >> new User(id: 2)
+        productService.findProductById(product.id) >> new Product(id: 1, quantity: 1)
+        basketRepository.findByProductIdAndUserId(1, 2) >> Optional.empty()
+
+        when:
+        basketService.addProduct(product)
+
+        then:
+        thrown IllegalArgumentException
+    }
+
+    def 'should add product to basket'() {
+        given:
+        def product = new Product(id: 1, quantity: 2)
+
+        when:
+        basketService.addProduct(product)
+
+        then:
+        1 * userService.getCurrentUser() >> new User(id: 2)
+        1 * productService.findProductById(product.id) >> new Product(id: 1, quantity: 3)
+        1 * basketRepository.findByProductIdAndUserId(1, 2) >> Optional.empty()
+        1 * basketRepository.save(_)
+        0 * _
+    }
+
+    def 'should get products from basket'() {
+        given:
+        userService.getCurrentUser() >> new User(id: 1)
+        basketRepository.findByUserId(1) >> [new Basket(quantity: 1, product: new Product(quantity: 2))]
+
+        when:
+        def result = basketService.getProducts()
+
+        then:
+        result == [new Product(quantity: 1)]
+    }
+
+    def 'should update basket'() {
+        given:
+        def product = new Product(id: 1, quantity: 2)
+
+        when:
+        basketService.updateBasket(product)
+
+        then:
+        1 * userService.getCurrentUser() >> new User(id: 2)
+        1 * productService.findProductById(product.id) >> new Product(id: 1, quantity: 3)
+        1 * basketRepository.findByProductIdAndUserId(1, 2) >> Optional.of(new Basket(quantity: 1))
+        1 * basketRepository.save(_)
+        0 * _
+    }
+
+    def 'should not update basket'() {
+        given:
+        def product = new Product(id: 1, quantity: 2)
+        userService.getCurrentUser() >> new User(id: 2)
+        productService.findProductById(product.id) >> new Product(id: 1, quantity: 1)
+        basketRepository.findByProductIdAndUserId(1, 2) >> Optional.of(new Basket(quantity: 3))
+
+        when:
+        basketService.updateBasket(product)
+
+        then:
+        thrown IllegalArgumentException
+    }
 }

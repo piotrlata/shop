@@ -3,7 +3,6 @@ package com.example.shop.service.impl
 import com.example.shop.domain.dao.Product
 import com.example.shop.repository.ProductRepository
 import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import spock.lang.Specification
 
 import javax.persistence.EntityNotFoundException

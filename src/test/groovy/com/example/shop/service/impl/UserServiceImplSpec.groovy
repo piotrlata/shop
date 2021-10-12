@@ -10,7 +10,6 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import spock.lang.Specification
 
 import javax.persistence.EntityNotFoundException
-import java.time.LocalDateTime
 
 class UserServiceImplSpec extends Specification {
     def userService
@@ -98,7 +97,7 @@ class UserServiceImplSpec extends Specification {
         userService.getCurrentUser()
 
         then:
-        1 * userRepository.findByEmail(SecurityUtils.getCurrentUserEmail()) >> Optional.of(new User(1, '', '', '', '', LocalDateTime.now(), LocalDateTime.now(), '', '', []))
+        1 * userRepository.findByEmail(SecurityUtils.getCurrentUserEmail()) >> Optional.of(new User(id: 1))
         0 * _
     }
 
