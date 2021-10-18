@@ -29,7 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public Category update(Category category, Long id) {
-        Category categoryDb = findCategoryById(id);
+        var categoryDb = findCategoryById(id);
         categoryDb.setDescription(category.getDescription());
         categoryDb.setName(category.getName());
         return categoryDb;

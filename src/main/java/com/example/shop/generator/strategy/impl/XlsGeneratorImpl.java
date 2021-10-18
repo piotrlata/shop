@@ -32,19 +32,19 @@ public class XlsGeneratorImpl implements GeneratorStrategy {
     @Override
     public byte[] generateFile() {
         log.info("xls");
-        try (Workbook workbook = WorkbookFactory.create(false)) {
-            Sheet sheet = workbook.createSheet("products");
-            Row row = sheet.createRow(0);
+        try (var workbook = WorkbookFactory.create(false)) {
+            var sheet = workbook.createSheet("products");
+            var row = sheet.createRow(0);
             row.createCell(0).setCellValue("id");
             row.createCell(1).setCellValue("name");
             row.createCell(2).setCellValue("price");
             row.createCell(3).setCellValue("description");
             row.createCell(4).setCellValue("quantity");
-            List<Product> products = productRepository.findAll();
+            var products = productRepository.findAll();
             int i = 1;
 
-            for (Product product : products) {
-                Row row1 = sheet.createRow(i);
+            for (var product : products) {
+                var row1 = sheet.createRow(i);
                 row1.createCell(0).setCellValue(product.getId());
                 row1.createCell(1).setCellValue(product.getName());
                 row1.createCell(2).setCellValue(product.getPrice());
@@ -53,7 +53,7 @@ public class XlsGeneratorImpl implements GeneratorStrategy {
                 i++;
             }
             sheet.setAutoFilter(new CellRangeAddress(0, products.size() + 1, 0, 4));
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            var byteArrayOutputStream = new ByteArrayOutputStream();
             workbook.write(byteArrayOutputStream);
             return byteArrayOutputStream.toByteArray();
 

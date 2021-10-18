@@ -35,7 +35,7 @@ public class SwaggerLoginConfig extends ApiListingScanner {
     @Override
     public Multimap<String, ApiListing> scan(ApiListingScanningContext context) {
         Multimap<String, ApiListing> scan = super.scan(context);
-        Operation operation = new OperationBuilder(new CachingOperationNameGenerator())
+        var operation = new OperationBuilder(new CachingOperationNameGenerator())
                 .method(HttpMethod.POST)
                 .uniqueId(LOGIN)
                 .parameters(Collections.singletonList(new ParameterBuilder()
@@ -53,7 +53,7 @@ public class SwaggerLoginConfig extends ApiListingScanner {
                 .summary(LOGIN)
                 .notes("here u can login")
                 .build();
-        ApiDescription apiDescription = new ApiDescription(LOGIN, "/api/login", "here you can login", Collections.singletonList(operation), false);
+        var apiDescription = new ApiDescription(LOGIN, "/api/login", "here you can login", Collections.singletonList(operation), false);
         scan.put("authentication", new ApiListingBuilder(context.getDocumentationContext().getApiDescriptionOrdering())
                 .apis(Collections.singletonList(apiDescription))
                 .description("jwt authentication")

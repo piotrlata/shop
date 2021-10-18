@@ -30,7 +30,7 @@ public class FileController {
     @ApiOperation(value = "generate file by type")
     public ResponseEntity<byte[]> testFactory(@RequestParam FileType fileType) {
         byte[] file = generatorFactory.getMapValue(fileType).generateFile();
-        HttpHeaders httpHeaders = new HttpHeaders();
+        var httpHeaders = new HttpHeaders();
         httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
         httpHeaders.set(HttpHeaders.CONTENT_LENGTH, Integer.toString(file.length));
         httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=report." + fileType.toString().toLowerCase(Locale.ROOT));
@@ -41,7 +41,7 @@ public class FileController {
     @ApiOperation(value = "generate file by type")
     public ResponseEntity<byte[]> testGenericFactory(@RequestParam FileType fileType) {
         byte[] file = fileFactory.getStrategyByType(fileType).generateFile();
-        HttpHeaders httpHeaders = new HttpHeaders();
+        var httpHeaders = new HttpHeaders();
         httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
         httpHeaders.set(HttpHeaders.CONTENT_LENGTH, Integer.toString(file.length));
         httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=report." + fileType.toString().toLowerCase(Locale.ROOT));

@@ -5,11 +5,10 @@ import com.example.shop.domain.dao.Basket;
 import com.example.shop.domain.dao.OrderClient;
 import com.example.shop.domain.dao.OrderDetails;
 import com.example.shop.domain.dao.User;
-import com.example.shop.repository.BasketRepository;
 import com.example.shop.repository.OrderRepository;
+import com.example.shop.service.BasketService;
 import com.example.shop.service.OrderService;
 import com.example.shop.service.UserService;
-import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,19 +20,19 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
-    private final BasketRepository basketRepository;
+    private final BasketService basketService;
     private final UserService userService;
 
     @Override
     public void createOrder() {
-        User currentUser = userService.getCurrentUser();
-        List<Basket> baskets = basketRepository.findByUserId(currentUser.getId());
+        var currentUser = userService.getCurrentUser();
+        var baskets = basketService.getBasket();
         if (baskets.isEmpty()) {
             throw new IllegalArgumentException("there is nothing in basket");
         }
         for (Basket basket : baskets) {
-            OrderClient orderClient = new OrderClient();
-            OrderDetails orderDetails = new OrderDetails();
+            var orderClient = new OrderClient();
+            var orderDetails = new OrderDetails();
             orderDetails.setUser(basket.getUser());
             orderDetails.setOrderStatus(OrderStatus.ACCEPTED);
             orderClient.setProduct(basket.getProduct());
@@ -44,18 +43,28 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void deleteOrder(Long orderDetailsId) {
-        orderRepository.deleteByOrderDetailsId(orderDetailsId);
+    public void cancelOrder(Long orderDetailsId) {
+        var optionalOrder = orderRepository.findByOrderDetailsId(orderDetailsId);
+        if (optionalOrder.isEmpty()) {
+            throw new IllegalArgumentException("there is no order with this number");
+        }
+        var orderClient = optionalOrder.get();
+        var details = orderClient.getOrderDetails();
+        if (details.getOrderStatus().equals(OrderStatus.SHIPPED)) {
+            throw new IllegalArgumentException("order is already shipped");
+        }
+        details.setOrderStatus(OrderStatus.CANCELED);
+        orderClient.setOrderDetails(details);
     }
 
     @Override
-    public void changeOrderStatus(Long orderDetailsId, OrderStatus status) throws NotFoundException {
-        Optional<OrderClient> optionalOrder = orderRepository.findByOrderDetailsId(orderDetailsId);
+    public void changeOrderStatus(Long orderDetailsId, OrderStatus status) {
+        var optionalOrder = orderRepository.findByOrderDetailsId(orderDetailsId);
         if (optionalOrder.isEmpty()) {
-            throw new NotFoundException("there is no order with this number");
+            throw new IllegalArgumentException("there is no order with this number");
         }
-        OrderClient orderClient = optionalOrder.get();
-        OrderDetails details = orderClient.getOrderDetails();
+        var orderClient = optionalOrder.get();
+        var details = orderClient.getOrderDetails();
         details.setOrderStatus(status);
         orderClient.setOrderDetails(details);
         if (details.getOrderStatus().equals(OrderStatus.SHIPPED)) {

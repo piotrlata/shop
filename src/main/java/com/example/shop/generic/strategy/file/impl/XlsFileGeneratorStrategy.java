@@ -31,19 +31,19 @@ public class XlsFileGeneratorStrategy implements FileGeneratorStrategy {
     @Override
     public byte[] generateFile() {
         log.info("xls");
-        try (Workbook workbook = WorkbookFactory.create(false)) {
-            Sheet sheet = workbook.createSheet("users");
-            Row row = sheet.createRow(0);
+        try (var workbook = WorkbookFactory.create(false)) {
+            var sheet = workbook.createSheet("users");
+            var row = sheet.createRow(0);
             row.createCell(0).setCellValue("id");
             row.createCell(1).setCellValue("firstName");
             row.createCell(2).setCellValue("lastName");
             row.createCell(3).setCellValue("email");
             row.createCell(4).setCellValue("password");
-            List<User> users = userRepository.findAll();
+            var users = userRepository.findAll();
             int i = 1;
 
-            for (User user : users) {
-                Row row1 = sheet.createRow(i);
+            for (var user : users) {
+                var row1 = sheet.createRow(i);
                 row1.createCell(0).setCellValue(user.getId());
                 row1.createCell(1).setCellValue(user.getFirstName());
                 row1.createCell(2).setCellValue(user.getLastName());
@@ -52,7 +52,7 @@ public class XlsFileGeneratorStrategy implements FileGeneratorStrategy {
                 i++;
             }
             sheet.setAutoFilter(new CellRangeAddress(0, users.size(), 0, 4));
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            var byteArrayOutputStream = new ByteArrayOutputStream();
             workbook.write(byteArrayOutputStream);
             return byteArrayOutputStream.toByteArray();
         } catch (IOException e) {

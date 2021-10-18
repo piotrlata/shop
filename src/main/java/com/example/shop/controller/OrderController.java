@@ -19,12 +19,12 @@ public class OrderController {
     @ApiOperation(value = "cancel order", authorizations = @Authorization(value = "JWT"))
     @PreAuthorize("isAuthenticated() && (hasRole('ADMIN') || @securityService.hasAccessToUser(#id))")
     public void deleteOrder(@PathVariable Long id) {
-        orderService.deleteOrder(id);
+        orderService.cancelOrder(id);
     }
 
     @PostMapping
     @ApiOperation(value = "create order", authorizations = @Authorization(value = "JWT"))
-    @PreAuthorize("isAuthenticated() && (hasRole('ADMIN') || @securityService.hasAccessToUser(#id))")
+    @PreAuthorize("isAuthenticated()")
     public void createOrder() {
         orderService.createOrder();
     }
@@ -32,7 +32,7 @@ public class OrderController {
     @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "update details of order", authorizations = @Authorization(value = "JWT"))
-    public void updateOrder(@RequestParam Long orderDetailsId, @RequestParam OrderStatus status) throws NotFoundException {
+    public void updateOrder(@RequestParam Long orderDetailsId, @RequestParam OrderStatus status) {
         orderService.changeOrderStatus(orderDetailsId, status);
     }
 }

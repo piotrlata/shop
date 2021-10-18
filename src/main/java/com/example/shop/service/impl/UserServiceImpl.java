@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User update(User user, Long id) {
-        User userDb = findUserById(id);
+        var userDb = findUserById(id);
         userDb.setEmail(user.getEmail());
         userDb.setFirstName(user.getFirstName());
         userDb.setLastName(user.getLastName());

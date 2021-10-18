@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Profile;
 public class HazelcastConfig {
     @Bean
     public Config configHazelcast() {
-        Config config = new Config()
+        var config = new Config()
                 .setInstanceName("hazelcast-instance")
                 .addMapConfig(new MapConfig()
                         .setName("product")

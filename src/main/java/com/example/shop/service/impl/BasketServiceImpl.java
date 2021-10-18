@@ -23,12 +23,12 @@ public class BasketServiceImpl implements BasketService {
 
     @Override
     public void addProduct(Product product) {
-        User currentUser = userService.getCurrentUser();
-        Product productById = productService.findProductById(product.getId());
-        Optional<Basket> optionalBasket = basketRepository.findByProductIdAndUserId(productById.getId(), currentUser.getId());
+        var currentUser = userService.getCurrentUser();
+        var productById = productService.findProductById(product.getId());
+        var optionalBasket = basketRepository.findByProductIdAndUserId(productById.getId(), currentUser.getId());
         if (optionalBasket.isPresent()) {
-            Basket basket = optionalBasket.get();
-            int quantity = product.getQuantity() + basket.getQuantity();
+            var basket = optionalBasket.get();
+            var quantity = product.getQuantity() + basket.getQuantity();
             if (quantity > productById.getQuantity()) {
                 throw new IllegalArgumentException("not enough quantity");
             }
@@ -38,7 +38,7 @@ public class BasketServiceImpl implements BasketService {
             if (product.getQuantity() > productById.getQuantity()) {
                 throw new IllegalArgumentException("not enough quantity");
             }
-            Basket basket = new Basket();
+            var basket = new Basket();
             basket.setProduct(product);
             basket.setQuantity(product.getQuantity());
             basket.setUser(currentUser);
@@ -48,16 +48,16 @@ public class BasketServiceImpl implements BasketService {
 
     @Override
     public void deleteProduct(Long productId) {
-        User currentUser = userService.getCurrentUser();
+        var currentUser = userService.getCurrentUser();
         basketRepository.deleteByProductIdAndUserId(productId, currentUser.getId());
     }
 
     @Override
     public void updateBasket(Product product) {
-        User currentUser = userService.getCurrentUser();
-        Product productById = productService.findProductById(product.getId());
+        var currentUser = userService.getCurrentUser();
+        var productById = productService.findProductById(product.getId());
         basketRepository.findByProductIdAndUserId(product.getId(), currentUser.getId()).ifPresent(basket -> {
-            int quantity = product.getQuantity() + basket.getQuantity();
+            var quantity = product.getQuantity() + basket.getQuantity();
             if (quantity > productById.getQuantity()) {
                 throw new IllegalArgumentException("not enough quantity");
             }
@@ -68,19 +68,25 @@ public class BasketServiceImpl implements BasketService {
 
     @Override
     public void clearBasket() {
-        User currentUser = userService.getCurrentUser();
+        var currentUser = userService.getCurrentUser();
         basketRepository.deleteByUserId(currentUser.getId());
     }
 
     @Override
     public List<Product> getProducts() {
-        User currentUser = userService.getCurrentUser();
+        var currentUser = userService.getCurrentUser();
         return basketRepository.findByUserId(currentUser.getId()).stream()
                 .map(basket -> {
-                    Product product = basket.getProduct();
+                    var product = basket.getProduct();
                     product.setQuantity(basket.getQuantity());
                     return product;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Basket> getBasket() {
+        var currentUser = userService.getCurrentUser();
+        return basketRepository.findByUserId(currentUser.getId());
     }
 }

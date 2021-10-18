@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface ProductMapper {
+public interface ProductMapper extends AuditingMapper<Product, ProductDto> {
     Product dtoToDao(ProductDto productDto);
 
     ProductDto daoToDto(Product product);

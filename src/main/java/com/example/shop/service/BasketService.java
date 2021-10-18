@@ -1,5 +1,6 @@
 package com.example.shop.service;
 
+import com.example.shop.domain.dao.Basket;
 import com.example.shop.domain.dao.Product;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public interface BasketService {
     void clearBasket();
 
     List<Product> getProducts();
+
+    List<Basket> getBasket();
 }

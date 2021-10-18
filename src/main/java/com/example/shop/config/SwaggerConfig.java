@@ -43,7 +43,7 @@ public class SwaggerConfig {
     }
 
     private List<SecurityReference> securityReferences() {
-        AuthorizationScope authorizationScope = new AuthorizationScope("global", "global jwt token");
+        var authorizationScope = new AuthorizationScope("global", "global jwt token");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
         return Collections.singletonList(new SecurityReference("JWT", authorizationScopes));

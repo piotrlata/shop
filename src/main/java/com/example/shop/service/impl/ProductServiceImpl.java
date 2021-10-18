@@ -31,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public Product update(Product product, Long id) {
-        Product productDb = findProductById(id);
+        var productDb = findProductById(id);
         productDb.setName(product.getName());
         productDb.setPrice(product.getPrice());
         productDb.setDescription(product.getDescription());

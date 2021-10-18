@@ -34,7 +34,7 @@ public class AdviceController {
         return e.getBindingResult().getAllErrors().stream()
                 .map(error -> {
                     if (error instanceof FieldError) {
-                        FieldError fieldError = (FieldError) error;
+                        var fieldError = (FieldError) error;
                         return new ErrorDto(fieldError.getField(), fieldError.getDefaultMessage());
                     }
                     return new ErrorDto(null, error.getDefaultMessage());

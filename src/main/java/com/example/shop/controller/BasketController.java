@@ -1,5 +1,6 @@
 package com.example.shop.controller;
 
+import com.example.shop.domain.dao.Basket;
 import com.example.shop.domain.dto.ProductDto;
 import com.example.shop.mapper.ProductMapper;
 import com.example.shop.service.BasketService;
@@ -47,5 +48,11 @@ public class BasketController {
     @ApiOperation(value = "update product in basket", authorizations = @Authorization(value = "JWT"))
     public void updateProductInBasket(@RequestBody ProductDto product) {
         basketService.updateBasket(productMapper.dtoToDao(product));
+    }
+
+    @GetMapping("/get")
+    @ApiOperation(value = "get basket", authorizations = @Authorization(value = "JWT"))
+    public List<Basket> getBasket() {
+        return basketService.getBasket();
     }
 }
