@@ -16,5 +16,5 @@ public interface BasketService {
 
     List<Product> getProducts();
 
-    List<Basket> getBasket();
+    List<Basket> getBaskets();
 }

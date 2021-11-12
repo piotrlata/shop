@@ -145,35 +145,6 @@ public class BasketControllerTest {
 
     @Test
     @WithMockUser(username = "qweasd")
-    void shouldClearBasket() throws Exception {
-        User user = userRepository.save(User.builder()
-                .firstName("asd")
-                .lastName("qwe")
-                .email("qweasd")
-                .password("asdqweqw")
-                .build());
-        Product product = productRepository.save(Product.builder()
-                .quantity(2)
-                .build());
-        basketRepository.save(Basket.builder()
-                .user(user)
-                .product(product)
-                .quantity(1)
-                .build());
-        mockMvc.perform(delete("/api/baskets/" + user.getId()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").doesNotExist());
-    }
-
-    @Test
-    void shouldNotClearBasketWithoutLoggedUser() throws Exception {
-        mockMvc.perform(delete("/api/baskets/1"))
-                .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$").doesNotExist());
-    }
-
-    @Test
-    @WithMockUser(username = "qweasd")
     void shouldGetProducts() throws Exception {
         User user = userRepository.save(User.builder()
                 .firstName("asd")
@@ -275,4 +246,32 @@ public class BasketControllerTest {
                 .andExpect(jsonPath("$").doesNotExist());
     }
 
+    @Test
+    @WithMockUser(username = "qweasd")
+    void shouldDeleteAllProductsFromBasket() throws Exception {
+        User user = userRepository.save(User.builder()
+                .firstName("asd")
+                .lastName("qwe")
+                .email("qweasd")
+                .password("asdqwe")
+                .build());
+        Product product = productRepository.save(Product.builder()
+                .quantity(10)
+                .build());
+        basketRepository.save(Basket.builder()
+                .user(user)
+                .product(product)
+                .quantity(4)
+                .build());
+        mockMvc.perform(delete("/api/baskets"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").doesNotExist());
+    }
+
+    @Test
+    void shouldNotDeleteProductsFromBasketWithoutLoggedUser() throws Exception {
+        mockMvc.perform(delete("/api/baskets"))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$").doesNotExist());
+    }
 }

@@ -139,4 +139,14 @@ class BasketServiceImplSpec extends Specification {
         then:
         thrown IllegalArgumentException
     }
+
+    def 'should get basket'() {
+        when:
+        basketService.getBaskets()
+
+        then:
+        1*userService.getCurrentUser() >> new User(id: 1L)
+        1*basketRepository.findByUserId(1L)
+        0*_
+    }
 }

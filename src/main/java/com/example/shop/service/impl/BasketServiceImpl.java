@@ -85,7 +85,7 @@ public class BasketServiceImpl implements BasketService {
     }
 
     @Override
-    public List<Basket> getBasket() {
+    public List<Basket> getBaskets() {
         var currentUser = userService.getCurrentUser();
         return basketRepository.findByUserId(currentUser.getId());
     }

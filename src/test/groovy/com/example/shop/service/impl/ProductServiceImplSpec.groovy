@@ -17,7 +17,7 @@ class ProductServiceImplSpec extends Specification {
 
     def 'should save product'() {
         given:
-        def product = new Product()
+        def product = new Product(id: 1L)
 
         when:
         productService.save(product)
@@ -29,7 +29,7 @@ class ProductServiceImplSpec extends Specification {
 
     def 'should find product by id'() {
         given:
-        productRepository.findById(1) >> Optional.of(new Product())
+        productRepository.findById(1) >> Optional.of(new Product(id: 2L))
 
         when:
         def result = productService.findProductById(1)
@@ -60,7 +60,7 @@ class ProductServiceImplSpec extends Specification {
 
     def 'should update product'() {
         given:
-        productRepository.findById(2) >> Optional.of(new Product())
+        productRepository.findById(2) >> Optional.of(new Product(id: 1L))
         def product = new Product(name: 'qweasd', price: 12.23, description: 'qweasdzxc', quantity: 21)
 
         when:

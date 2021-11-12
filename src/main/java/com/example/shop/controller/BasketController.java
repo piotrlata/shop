@@ -49,10 +49,4 @@ public class BasketController {
     public void updateProductInBasket(@RequestBody ProductDto product) {
         basketService.updateBasket(productMapper.dtoToDao(product));
     }
-
-    @GetMapping("/get")
-    @ApiOperation(value = "get basket", authorizations = @Authorization(value = "JWT"))
-    public List<Basket> getBasket() {
-        return basketService.getBasket();
-    }
 }

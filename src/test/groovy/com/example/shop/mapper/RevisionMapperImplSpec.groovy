@@ -13,7 +13,7 @@ class RevisionMapperImplSpec extends Specification {
 
     def 'should map user revision to user dto'() {
         given:
-        def user = new User(id: 1, firstName: "zxc", lastName: "asd", email: "qwe")
+        def user = new User(id: 1, firstName: "zxc", lastName: "asdw", email: "qwe")
         def userRevision = Revision.of(new DefaultRevisionMetadata(new DefaultRevisionEntity(id: 1)), user)
 
         when:

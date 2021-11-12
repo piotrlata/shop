@@ -1,6 +1,6 @@
 package com.example.shop.mapper
 
-import com.example.shop.domain.dao.Category
+
 import com.example.shop.domain.dao.Product
 import com.example.shop.domain.dto.ProductDto
 import spock.lang.Specification
@@ -10,7 +10,7 @@ class ProductMapperImplSpec extends Specification {
 
     def 'should map dao to dto'() {
         given:
-        def product = new Product(id: 1,name: "",price: 12.00,description: "",quantity: 1,category: new Category())
+        def product = new Product(id: 1, name: "asd", price: 12.00, description: "qwe", quantity: 1)
 
         when:
         def result = productMapper.daoToDto(product)
@@ -25,7 +25,7 @@ class ProductMapperImplSpec extends Specification {
 
     def 'should map dto to dao'() {
         given:
-        def productDto = new ProductDto(id: 1,name: "",price: 11.00,description: "",quantity: 1)
+        def productDto = new ProductDto(id: 1, name: "asd", price: 11.00, description: "qwe", quantity: 1)
 
         when:
         def result = productMapper.dtoToDao(productDto)

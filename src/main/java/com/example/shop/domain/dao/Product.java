@@ -26,7 +26,6 @@ public class Product extends Auditable implements IdentifiedDataSerializable {
     private String description;
     private Integer quantity;
     @ManyToOne
-    @JoinTable(name = "user_category", inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Category category;
 
     @Override

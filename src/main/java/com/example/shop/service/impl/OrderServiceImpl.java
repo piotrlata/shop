@@ -4,29 +4,23 @@ import com.example.shop.domain.OrderStatus;
 import com.example.shop.domain.dao.Basket;
 import com.example.shop.domain.dao.OrderClient;
 import com.example.shop.domain.dao.OrderDetails;
-import com.example.shop.domain.dao.User;
 import com.example.shop.repository.OrderRepository;
 import com.example.shop.service.BasketService;
 import com.example.shop.service.OrderService;
-import com.example.shop.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final BasketService basketService;
-    private final UserService userService;
 
     @Override
     public void createOrder() {
-        var currentUser = userService.getCurrentUser();
-        var baskets = basketService.getBasket();
+        var baskets = basketService.getBaskets();
         if (baskets.isEmpty()) {
             throw new IllegalArgumentException("there is nothing in basket");
         }

@@ -17,7 +17,7 @@ class CategoryServiceImplSpec extends Specification {
 
     def 'should save category'() {
         given:
-        def category = new Category(1, "", "")
+        def category = new Category(id: 1)
 
         when:
         categoryService.save(category)
@@ -29,7 +29,7 @@ class CategoryServiceImplSpec extends Specification {
 
     def 'should find category by id'() {
         given:
-        categoryRepository.findById(1) >> Optional.of(new Category(1, "", ""))
+        categoryRepository.findById(1) >> Optional.of(new Category(id: 1))
 
         when:
         def result = categoryService.findCategoryById(1)
@@ -60,7 +60,7 @@ class CategoryServiceImplSpec extends Specification {
 
     def 'should update category'() {
         given:
-        categoryRepository.findById(1) >> Optional.of(new Category())
+        categoryRepository.findById(1) >> Optional.of(new Category(id: 1))
         def category = new Category(name: 'phone', description: 'qweasdzxcasdqwe')
 
         when:

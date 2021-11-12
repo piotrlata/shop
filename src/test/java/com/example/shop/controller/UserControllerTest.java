@@ -216,4 +216,22 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").doesNotExist());
     }
+
+    @Test
+    @WithMockUser(username = "qweasd")
+    void shouldGetUser() throws Exception {
+        User user = userRepository.save(User.builder()
+                .firstName("asd")
+                .lastName("qwe")
+                .email("qweasd")
+                .password("asdqweqw")
+                .build());
+        mockMvc.perform(get("/api/users/"+ user.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(user.getId()))
+                .andExpect(jsonPath("$.firstName").value(user.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(user.getLastName()))
+                .andExpect(jsonPath("$.email").value(user.getEmail()))
+                .andExpect(jsonPath("$.password").doesNotExist());;
+    }
 }
