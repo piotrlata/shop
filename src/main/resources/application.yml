@@ -14,3 +14,17 @@ spring:
   flyway:
     baselineOnMigrate: true
     enabled: false
+  mail:
+    username: emailtestowy64
+    password: admin12#
+    host: smtp.gmail.com
+    port: 587
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            reqired: true
