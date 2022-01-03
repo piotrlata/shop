@@ -4,7 +4,6 @@ import com.example.shop.domain.OrderStatus;
 import com.example.shop.service.OrderService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
-import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

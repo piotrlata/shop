@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -29,7 +30,8 @@ public class ProductController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "save product", authorizations = @Authorization(value = "JWT"))
-    public ProductDto saveProduct(@RequestBody @Valid ProductDto product) {
+    public ProductDto saveProduct(@RequestPart @Valid ProductDto product, @RequestPart MultipartFile image) {
+        System.out.println(image.getOriginalFilename());
         return productMapper.daoToDto(productService.save(productMapper.dtoToDao(product)));
     }
 
@@ -49,7 +51,7 @@ public class ProductController {
     @PutMapping("{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "update product", authorizations = @Authorization(value = "JWT"))
-    public ProductDto updateProduct(@RequestBody @Valid ProductDto product, @PathVariable Long id) {
+    public ProductDto updateProduct(@RequestPart @Valid ProductDto product, @RequestPart MultipartFile image, @PathVariable Long id) {
         return productMapper.daoToDto(productService.update(productMapper.dtoToDao(product), id));
     }
 }

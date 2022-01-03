@@ -11,7 +11,6 @@ import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiDescription;
 import springfox.documentation.service.ApiListing;
-import springfox.documentation.service.Operation;
 import springfox.documentation.service.ResponseMessage;
 import springfox.documentation.spring.web.plugins.DocumentationPluginsManager;
 import springfox.documentation.spring.web.readers.operation.CachingOperationNameGenerator;
@@ -46,8 +45,10 @@ public class SwaggerLoginConfig extends ApiListingScanner {
                         .modelRef(new ModelRef("LoginDto"))
                         .build()))
                 .responseMessages(Set.of(
-                        new ResponseMessage(200, "correct login", new ModelRef("SuccessfulLoginDto"), Collections.emptyMap(), Collections.emptyList()),
-                        new ResponseMessage(401, "incorrect login data", new ModelRef("String"), Collections.emptyMap(), Collections.emptyList())
+                        new ResponseMessage(200, "correct login",
+                                new ModelRef("SuccessfulLoginDto"), Collections.emptyMap(), Collections.emptyList()),
+                        new ResponseMessage(401, "incorrect login data",
+                                new ModelRef("String"), Collections.emptyMap(), Collections.emptyList())
                 ))
                 .consumes(Collections.singleton(MediaType.APPLICATION_JSON_VALUE))
                 .summary(LOGIN)

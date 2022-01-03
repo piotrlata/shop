@@ -2,7 +2,6 @@ package com.example.shop.service.impl;
 
 import com.example.shop.domain.NotificationStatus;
 import com.example.shop.domain.dao.NotificationHistory;
-import com.example.shop.domain.dao.Template;
 import com.example.shop.repository.NotificationHistoryRepository;
 import com.example.shop.service.EmailService;
 import com.example.shop.service.TemplateService;

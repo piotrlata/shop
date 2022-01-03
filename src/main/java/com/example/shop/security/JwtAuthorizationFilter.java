@@ -1,5 +1,6 @@
 package com.example.shop.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,24 +31,28 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             chain.doFilter(request, response);
             return;
         }
-        var claims = Jwts.parser()
-                .setSigningKey("qwertyyuiop")
-                .parseClaimsJws(token.replace("Bearer ", ""))
-                .getBody();
-        var email = claims.getSubject();
-        if (email == null) {
+        try {
+            var claims = Jwts.parser()
+                    .setSigningKey("qwertyyuiop")
+                    .parseClaimsJws(token.replace("Bearer ", ""))
+                    .getBody();
+            var email = claims.getSubject();
+            if (email == null) {
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                return;
+            }
+            var authorities = claims.get("authorities", String.class);
+            var authorityList = new ArrayList<SimpleGrantedAuthority>();
+            if (authorities != null && !authorities.isEmpty()) {
+                authorityList = Arrays.stream(authorities.split(","))
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toCollection(ArrayList::new));
+            }
+            var authenticationToken = new UsernamePasswordAuthenticationToken(email, null, authorityList);
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            chain.doFilter(request, response);
+        } catch (ExpiredJwtException e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            return;
         }
-        var authorities = claims.get("authorities", String.class);
-        var authorityList = new ArrayList<SimpleGrantedAuthority>();
-        if (authorities != null && !authorities.isEmpty()) {
-            authorityList = Arrays.stream(authorities.split(","))
-                    .map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toCollection(ArrayList::new));
-        }
-        var authenticationToken = new UsernamePasswordAuthenticationToken(email, null, authorityList);
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        chain.doFilter(request, response);
     }
 }

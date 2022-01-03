@@ -2,7 +2,6 @@ package com.example.shop.service.impl;
 
 import com.example.shop.domain.dao.Basket;
 import com.example.shop.domain.dao.Product;
-import com.example.shop.domain.dao.User;
 import com.example.shop.repository.BasketRepository;
 import com.example.shop.service.BasketService;
 import com.example.shop.service.ProductService;
@@ -11,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

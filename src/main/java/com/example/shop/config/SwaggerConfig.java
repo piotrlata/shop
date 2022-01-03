@@ -50,7 +50,8 @@ public class SwaggerConfig {
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfo("Shop Api Documentation", "description", "1.0.0", "urn:tos",
+        return new ApiInfo("Shop Api Documentation", "you can create user in user controller then login in default tab" +
+                "after that you can add products to your basket and make an order", "1.0.0", "urn:tos",
                 new Contact("Piotr Latawiec", "https://github.com/piotrlata/shop", "latawiecpc@gmail.com"),
                 "Apache 2.0", "http://www.apache.org/licenses/LICENSE-2.0", Collections.emptyList());
     }

@@ -1,6 +1,5 @@
 package com.example.shop.controller;
 
-import com.example.shop.domain.dao.Basket;
 import com.example.shop.domain.dto.ProductDto;
 import com.example.shop.mapper.ProductMapper;
 import com.example.shop.service.BasketService;

@@ -3,7 +3,6 @@ package com.example.shop.security;
 import com.example.shop.domain.dto.LoginDto;
 import com.example.shop.domain.dto.SuccessfulLoginDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.DefaultClaims;
@@ -35,6 +34,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        if (!request.getMethod().equals("POST")) {
+            throw new AuthenticationServiceException("http method not supported" + request.getMethod());
+        }
         try {
             var loginDto = objectMapper.readValue(request.getInputStream(), LoginDto.class);
             var authenticationToken = new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
@@ -58,6 +60,5 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .compact();
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         objectMapper.writeValue(response.getWriter(), new SuccessfulLoginDto(token));
-
     }
 }

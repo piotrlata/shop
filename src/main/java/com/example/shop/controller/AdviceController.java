@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 @Slf4j
 public class AdviceController {
-
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public void handleEntityNotFoundException(EntityNotFoundException e) {

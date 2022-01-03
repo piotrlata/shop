@@ -1,22 +1,17 @@
 package com.example.shop.generator.strategy.impl;
 
-import com.example.shop.domain.dao.Product;
 import com.example.shop.exception.FileGenerateException;
 import com.example.shop.generator.model.FileType;
 import com.example.shop.generator.strategy.GeneratorStrategy;
 import com.example.shop.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
 
 @Slf4j
 @Component
