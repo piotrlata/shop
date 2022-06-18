@@ -28,3 +28,6 @@ spring:
           starttls:
             enable: true
             reqired: true
+
+file:
+  product: C:\Users\Piotr\Pictures\zapisane obrazy
