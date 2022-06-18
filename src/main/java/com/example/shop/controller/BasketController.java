@@ -3,8 +3,8 @@ package com.example.shop.controller;
 import com.example.shop.domain.dto.ProductDto;
 import com.example.shop.mapper.ProductMapper;
 import com.example.shop.service.BasketService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Authorization;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -20,31 +20,36 @@ public class BasketController {
     private final ProductMapper productMapper;
 
     @DeleteMapping("/{id}")
-    @ApiOperation(value = "delete product from basket by id", authorizations = @Authorization(value = "JWT"))
+    @Operation(description = "delete product from basket", security = {@SecurityRequirement(name = "bearer"),
+            @SecurityRequirement(name = "basicAuth")})
     public void deleteProductFromBasket(@PathVariable Long id) {
         basketService.deleteProduct(id);
     }
 
     @DeleteMapping
-    @ApiOperation(value = "delete all products from basket", authorizations = @Authorization(value = "JWT"))
+    @Operation(description = "delete all from", security = {@SecurityRequirement(name = "bearer"),
+            @SecurityRequirement(name = "basicAuth")})
     public void deleteAllFromBasket() {
         basketService.clearBasket();
     }
 
     @GetMapping
-    @ApiOperation(value = "get all products", authorizations = @Authorization(value = "JWT"))
+    @Operation(description = "get all products", security = {@SecurityRequirement(name = "bearer"),
+            @SecurityRequirement(name = "basicAuth")})
     public List<ProductDto> getAllProducts() {
         return productMapper.listDaoToListDto(basketService.getProducts());
     }
 
     @PostMapping
-    @ApiOperation(value = "add product to basket", authorizations = @Authorization(value = "JWT"))
+    @Operation(description = "add product to basket", security = {@SecurityRequirement(name = "bearer"),
+            @SecurityRequirement(name = "basicAuth")})
     public void addProductToBasket(@RequestBody ProductDto product) {
         basketService.addProduct(productMapper.dtoToDao(product));
     }
 
     @PutMapping
-    @ApiOperation(value = "update product in basket", authorizations = @Authorization(value = "JWT"))
+    @Operation(description = "save product", security = {@SecurityRequirement(name = "bearer"),
+            @SecurityRequirement(name = "basicAuth")})
     public void updateProductInBasket(@RequestBody ProductDto product) {
         basketService.updateBasket(productMapper.dtoToDao(product));
     }

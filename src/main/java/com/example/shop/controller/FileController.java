@@ -6,7 +6,8 @@ import com.example.shop.generic.GenericFactory;
 import com.example.shop.generic.strategy.file.FileGeneratorStrategy;
 import com.example.shop.generic.strategy.mail.MailSenderStrategy;
 import com.example.shop.generic.strategy.mail.model.MailType;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -27,7 +28,8 @@ public class FileController {
     private final GenericFactory<MailType, MailSenderStrategy> mailFactory;
 
     @GetMapping
-    @ApiOperation(value = "generate file by type")
+    @Operation(description = "generate file by type", security = {@SecurityRequirement(name = "bearer"),
+            @SecurityRequirement(name = "basicAuth")})
     public ResponseEntity<byte[]> testFactory(@RequestParam FileType fileType) {
         byte[] file = generatorFactory.getMapValue(fileType).generateFile();
         var httpHeaders = new HttpHeaders();
@@ -38,8 +40,9 @@ public class FileController {
     }
 
     @GetMapping("/generic")
-    @ApiOperation(value = "generate file by type")
-    public ResponseEntity<byte[]> testGenericFactory(@RequestParam FileType fileType) {
+    @Operation(description = "generate file by type", security = {@SecurityRequirement(name = "bearer"),
+            @SecurityRequirement(name = "basicAuth")})
+    public ResponseEntity<byte[]> testGenericFactory(@RequestParam FileType fileType) throws Exception {
         byte[] file = fileFactory.getStrategyByType(fileType).generateFile();
         var httpHeaders = new HttpHeaders();
         httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
@@ -49,7 +52,8 @@ public class FileController {
     }
 
     @GetMapping("mail")
-    @ApiOperation(value = "test method for generic flyweight pattern")
+    @Operation(description = "test method for generic flyweight pattern", security = {@SecurityRequirement(name = "bearer"),
+            @SecurityRequirement(name = "basicAuth")})
     public void testMailFactory(@RequestParam MailType mailType) {
         mailFactory.getStrategyByType(mailType).sendMail();
 

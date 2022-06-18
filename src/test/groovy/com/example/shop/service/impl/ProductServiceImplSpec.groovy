@@ -20,7 +20,7 @@ class ProductServiceImplSpec extends Specification {
         def product = new Product(id: 1L)
 
         when:
-        productService.save(product)
+        productService.save(product, image)
 
         then:
         1 * productRepository.save(product)

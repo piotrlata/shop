@@ -2,15 +2,15 @@ package com.example.shop.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Data
-@Builder
+@SuperBuilder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,5 +24,6 @@ public class ProductDto extends AuditableDto {
     private String description;
     @Min(value = 1, message = "quantity cannot be less than 1")
     private Integer quantity;
+    private String filePath;
     private Integer revisionNumber;
 }

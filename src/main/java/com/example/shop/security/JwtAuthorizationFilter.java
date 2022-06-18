@@ -27,8 +27,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         var token = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (token == null || !token.startsWith("Bearer ")) {
+        if (token == null || !token.startsWith("Bearer ") && !token.startsWith("Basic ")) {
             chain.doFilter(request, response);
+            return;
+        }
+        if (token.startsWith("Basic ")) {
+            super.doFilterInternal(request, response, chain);
             return;
         }
         try {

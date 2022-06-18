@@ -20,7 +20,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email).map(user -> new User(email, user.getPassword(), user.getRoles().stream()
+        return userRepository.findByEmail(email)
+                .map(user -> new User(email, user.getPassword(), user.getRoles().stream()
                         .map(role -> new SimpleGrantedAuthority(role.getName()))
                         .collect(Collectors.toSet())))
                 .orElseThrow(() -> new UsernameNotFoundException(email));

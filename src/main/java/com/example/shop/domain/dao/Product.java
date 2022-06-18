@@ -27,6 +27,7 @@ public class Product extends Auditable implements IdentifiedDataSerializable {
     private Integer quantity;
     @ManyToOne
     private Category category;
+    private String filePath;
 
     @Override
     public int getFactoryId() {
@@ -44,6 +45,7 @@ public class Product extends Auditable implements IdentifiedDataSerializable {
         out.writeString(description);
         out.writeDouble(price);
         out.writeInt(quantity);
+        out.writeString(filePath);
     }
 
     @Override
@@ -52,5 +54,6 @@ public class Product extends Auditable implements IdentifiedDataSerializable {
         this.description = in.readString();
         this.price = in.readDouble();
         this.quantity = in.readInt();
+        this.filePath = in.readString();
     }
 }

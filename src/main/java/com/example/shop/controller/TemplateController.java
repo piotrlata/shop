@@ -4,6 +4,8 @@ import com.example.shop.domain.dto.TemplateDto;
 import com.example.shop.mapper.TemplateMapper;
 import com.example.shop.service.TemplateService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,5 +33,10 @@ public class TemplateController {
     @GetMapping("/{id}")
     public TemplateDto templateById(@PathVariable Long id) {
         return templateMapper.daoToDto(templateService.findTemplateById(id));
+    }
+
+    @GetMapping
+    public Page<TemplateDto> getPage(@RequestParam int page, @RequestParam int size) {
+        return templateService.getPage(PageRequest.of(page, size)).map(templateMapper::daoToDto);
     }
 }

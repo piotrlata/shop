@@ -5,6 +5,8 @@ import com.example.shop.repository.TemplateRepository;
 import com.example.shop.service.TemplateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -45,4 +47,11 @@ public class TemplateServiceImpl implements TemplateService {
     public Template findByName(String templateName) {
         return templateRepository.findByName(templateName).orElseThrow(EntityNotFoundException::new);
     }
+
+    @Override
+    public Page<Template> getPage(Pageable pageable) {
+        return templateRepository.findAll(pageable);
+    }
+
+
 }

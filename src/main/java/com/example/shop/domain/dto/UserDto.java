@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Data
 @SuperBuilder
@@ -29,4 +30,5 @@ public class UserDto extends AuditableDto {
     @NotBlank(groups = CreateUser.class)
     private String confirmedPassword;
     private Integer revisionNumber;
+    private List<String> roles;
 }

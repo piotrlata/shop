@@ -232,6 +232,6 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.firstName").value(user.getFirstName()))
                 .andExpect(jsonPath("$.lastName").value(user.getLastName()))
                 .andExpect(jsonPath("$.email").value(user.getEmail()))
-                .andExpect(jsonPath("$.password").doesNotExist());;
+                .andExpect(jsonPath("$.password").doesNotExist());
     }
 }

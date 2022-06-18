@@ -3,8 +3,8 @@ package com.example.shop.controller;
 import com.example.shop.domain.dto.CategoryDto;
 import com.example.shop.mapper.CategoryMapper;
 import com.example.shop.service.CategoryService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Authorization;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,34 +19,39 @@ public class CategoryController {
     private final CategoryMapper categoryMapper;
 
     @GetMapping("/{id}")
-    @ApiOperation(value = "get category by id")
+    @Operation(description = "save product", security = {@SecurityRequirement(name = "bearer"),
+            @SecurityRequirement(name = "basicAuth")})
     public CategoryDto categoryById(@PathVariable Long id) {
         return categoryMapper.daoToDto(categoryService.findCategoryById(id));
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    @ApiOperation(value = "save category", authorizations = @Authorization(value = "JWT"))
+    @Operation(description = "save category", security = {@SecurityRequirement(name = "bearer"),
+            @SecurityRequirement(name = "basicAuth")})
     public CategoryDto saveCategory(@RequestBody CategoryDto category) {
         return categoryMapper.daoToDto(categoryService.save(categoryMapper.dtoToDao(category)));
     }
 
     @GetMapping
-    @ApiOperation(value = "get category page")
+    @Operation(description = "get category page", security = {@SecurityRequirement(name = "bearer"),
+            @SecurityRequirement(name = "basicAuth")})
     public Page<CategoryDto> categoryPage(@RequestParam int page, @RequestParam int size) {
         return categoryService.getPage(PageRequest.of(page, size)).map(categoryMapper::daoToDto);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    @ApiOperation(value = "delete category by id", authorizations = @Authorization(value = "JWT"))
+    @Operation(description = "delete category", security = {@SecurityRequirement(name = "bearer"),
+            @SecurityRequirement(name = "basicAuth")})
     public void deleteCategory(@PathVariable Long id) {
         categoryService.delete(id);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    @ApiOperation(value = "update category", authorizations = @Authorization(value = "JWT"))
+    @Operation(description = "update category", security = {@SecurityRequirement(name = "bearer"),
+            @SecurityRequirement(name = "basicAuth")})
     public CategoryDto updateCategory(@RequestBody CategoryDto category, @PathVariable Long id) {
         return categoryMapper.daoToDto(categoryService.update(categoryMapper.dtoToDao(category), id));
     }

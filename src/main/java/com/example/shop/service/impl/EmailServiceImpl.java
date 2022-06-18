@@ -7,6 +7,7 @@ import com.example.shop.service.EmailService;
 import com.example.shop.service.TemplateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -28,7 +29,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendEmail(String emailReceiver, String templateName, Map<String, Object> variables) {
+    public void sendEmail(String emailReceiver, String templateName, Map<String, Object> variables, byte[] file, String fileName) {
         var template = templateService.findByName(templateName);
         var context = new Context(Locale.forLanguageTag("pl"), variables);
         var body = iTemplateEngine.process(template.getBody(), context);
@@ -40,11 +41,14 @@ public class EmailServiceImpl implements EmailService {
                 .build());
         try {
             javaMailSender.send(message -> {
-                var helper = new MimeMessageHelper(message);
+                var helper = new MimeMessageHelper(message, true);
                 helper.setTo(emailReceiver);
                 helper.setFrom("emailtestowy64@gmail.com");
                 helper.setSubject(template.getSubject());
                 helper.setText(body, true);
+                if (file != null && fileName != null) {
+                    helper.addAttachment(fileName, new ByteArrayResource(file));
+                }
             });
             notificationHistory.setStatus(NotificationStatus.SUCCESS);
         } catch (Exception e) {

@@ -6,6 +6,9 @@ import com.example.shop.repository.RoleRepository
 import com.example.shop.repository.UserRepository
 import com.example.shop.security.SecurityUtils
 import org.springframework.data.domain.PageRequest
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContext
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import spock.lang.Specification
 
@@ -93,20 +96,33 @@ class UserServiceImplSpec extends Specification {
     }
 
     def 'should get current user'() {
+        given:
+        def context = Mock(SecurityContext)
+        SecurityContextHolder.setContext(context)
+        def authentication = Mock(Authentication)
+
         when:
         userService.getCurrentUser()
 
         then:
-        1 * userRepository.findByEmail(SecurityUtils.getCurrentUserEmail()) >> Optional.of(new User(id: 1))
+        1 * context.getAuthentication() >> authentication
+        1 * authentication.getName() >> "string"
+        1 * userRepository.findByEmail("string") >> Optional.of(new User(id: 1))
         0 * _
     }
 
     def 'should not get current user'() {
+        given:
+        def context = Mock(SecurityContext)
+        SecurityContextHolder.setContext(context)
+        def authentication = Mock(Authentication)
+        context.getAuthentication() >> authentication
+        userRepository.findByEmail(null) >> Optional.empty()
+
         when:
         userService.getCurrentUser()
 
         then:
-        userRepository.findByEmail(SecurityUtils.getCurrentUserEmail()) >> Optional.empty()
         thrown EntityNotFoundException
     }
 }
